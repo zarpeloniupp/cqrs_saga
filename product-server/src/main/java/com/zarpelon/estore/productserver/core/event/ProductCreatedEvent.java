@@ -1,4 +1,4 @@
-package com.zarpelon.estore.productserver.event;
+package com.zarpelon.estore.productserver.core.event;
 
 import java.math.BigDecimal;
 import lombok.Data;

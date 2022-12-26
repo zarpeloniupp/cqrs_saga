@@ -25,11 +25,6 @@ public class ProductController {
         this.commandGateway = commandGateway;
     }
 
-    @GetMapping
-    public String get() {
-        return "GET Products";
-    }
-
     @PostMapping
     public String createProduct(@RequestBody CreateProductRestModel createProductRestModel) {
         var createProductCommand = CreateProductCommand.builder()

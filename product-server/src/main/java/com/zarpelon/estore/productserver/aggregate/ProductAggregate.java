@@ -1,7 +1,7 @@
 package com.zarpelon.estore.productserver.aggregate;
 
 import com.zarpelon.estore.productserver.command.CreateProductCommand;
-import com.zarpelon.estore.productserver.event.ProductCreatedEvent;
+import com.zarpelon.estore.productserver.core.event.ProductCreatedEvent;
 import java.math.BigDecimal;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
