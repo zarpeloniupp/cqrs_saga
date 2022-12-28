@@ -1,6 +1,6 @@
 package com.zarpelon.estore.productserver.command;
 
-import com.zarpelon.estore.productserver.command.CreateProductCommand;
+import com.zarpelon.estore.productserver.command.model.CreateProductCommand;
 import com.zarpelon.estore.productserver.core.event.ProductCreatedEvent;
 import java.math.BigDecimal;
 import org.axonframework.commandhandling.CommandHandler;
@@ -28,6 +28,7 @@ public class ProductAggregate {
         if (createProductCommand.getPrice().compareTo(BigDecimal.ZERO) <=0) {
             throw new IllegalArgumentException("price cannot be less opr equal than zero");
         }
+
         if (createProductCommand.getTitle() == null
                 || createProductCommand.getTitle().isBlank()) {
             throw new IllegalArgumentException("title cannot be empty");

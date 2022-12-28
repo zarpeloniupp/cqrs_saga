@@ -1,4 +1,4 @@
-package com.zarpelon.estore.productserver.core.model;
+package com.zarpelon.estore.productserver.command.model;
 
 import java.math.BigDecimal;
 import javax.validation.constraints.Max;

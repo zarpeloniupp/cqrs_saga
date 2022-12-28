@@ -1,4 +1,4 @@
-package com.zarpelon.estore.productserver.core.data;
+package com.zarpelon.estore.productserver.command.data;
 
 import java.io.Serializable;
 import javax.persistence.Column;

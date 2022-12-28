@@ -1,8 +1,8 @@
 package com.zarpelon.estore.productserver.command.rest;
 
 
-import com.zarpelon.estore.productserver.command.CreateProductCommand;
-import com.zarpelon.estore.productserver.core.model.CreateProductRestModel;
+import com.zarpelon.estore.productserver.command.model.CreateProductCommand;
+import com.zarpelon.estore.productserver.command.model.CreateProductRestModel;
 import java.util.UUID;
 import javax.validation.Valid;
 import org.axonframework.commandhandling.gateway.CommandGateway;

@@ -1,7 +1,7 @@
-package com.zarpelon.estore.productserver.command;
+package com.zarpelon.estore.productserver.command.handller;
 
-import com.zarpelon.estore.productserver.core.data.ProductLookupEntity;
-import com.zarpelon.estore.productserver.core.data.ProductLookupRepository;
+import com.zarpelon.estore.productserver.command.data.ProductLookupEntity;
+import com.zarpelon.estore.productserver.command.data.ProductLookupRepository;
 import com.zarpelon.estore.productserver.core.event.ProductCreatedEvent;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;

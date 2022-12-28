@@ -1,8 +1,8 @@
 package com.zarpelon.estore.productserver.command;
 
-import com.zarpelon.estore.productserver.core.data.ProductLookupEntity;
-import com.zarpelon.estore.productserver.core.data.ProductLookupRepository;
-import java.math.BigDecimal;
+import com.zarpelon.estore.productserver.command.model.CreateProductCommand;
+import com.zarpelon.estore.productserver.command.data.ProductLookupEntity;
+import com.zarpelon.estore.productserver.command.data.ProductLookupRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -24,7 +24,6 @@ public class CreateProductCommandInterceptor implements MessageDispatchIntercept
         this.productLookupRepository = productLookupRepository;
     }
 
-    @Nonnull
     @Override
     public BiFunction<Integer, CommandMessage<?>, CommandMessage<?>> handle(@Nonnull List<? extends CommandMessage<?>> list) {
 

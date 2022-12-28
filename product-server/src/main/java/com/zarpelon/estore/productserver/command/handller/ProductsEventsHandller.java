@@ -1,4 +1,4 @@
-package com.zarpelon.estore.productserver.query.handller;
+package com.zarpelon.estore.productserver.command.handller;
 
 import com.zarpelon.estore.productserver.core.data.ProductEntity;
 import com.zarpelon.estore.productserver.core.data.ProductRepository;

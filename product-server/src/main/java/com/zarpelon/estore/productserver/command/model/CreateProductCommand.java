@@ -1,4 +1,4 @@
-package com.zarpelon.estore.productserver.command;
+package com.zarpelon.estore.productserver.command.model;
 
 import java.math.BigDecimal;
 import lombok.Builder;
