@@ -4,6 +4,7 @@ package com.zarpelon.estore.productserver.command.rest;
 import com.zarpelon.estore.productserver.command.CreateProductCommand;
 import com.zarpelon.estore.productserver.core.model.CreateProductRestModel;
 import java.util.UUID;
+import javax.validation.Valid;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -27,7 +28,7 @@ public class ProductCommandController {
     }
 
     @PostMapping
-    public String createProduct(@RequestBody CreateProductRestModel createProductRestModel) {
+    public String createProduct(@Valid @RequestBody CreateProductRestModel createProductRestModel) {
         var createProductCommand = CreateProductCommand.builder()
                 .price(createProductRestModel.getPrice())
                 .quantity(createProductRestModel.getQuantity())

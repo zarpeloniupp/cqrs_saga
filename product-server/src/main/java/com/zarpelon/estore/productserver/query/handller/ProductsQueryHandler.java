@@ -1,7 +1,7 @@
 package com.zarpelon.estore.productserver.query.handller;
 
 import com.zarpelon.estore.productserver.core.data.ProductEntity;
-import com.zarpelon.estore.productserver.core.data.ProductsRepository;
+import com.zarpelon.estore.productserver.core.data.ProductRepository;
 import com.zarpelon.estore.productserver.query.FindProductsQuery;
 import com.zarpelon.estore.productserver.query.model.ProductRestModel;
 import java.util.ArrayList;
@@ -13,10 +13,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductsQueryHandler {
 
-    private final ProductsRepository productsRepository;
+    private final ProductRepository productRepository;
 
-    public ProductsQueryHandler(ProductsRepository productsRepository) {
-        this.productsRepository = productsRepository;
+    public ProductsQueryHandler(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     @QueryHandler
@@ -24,7 +24,7 @@ public class ProductsQueryHandler {
 
         List<ProductRestModel> productRest = new ArrayList<>();
 
-        List<ProductEntity> storedProducts = productsRepository.findAll();
+        List<ProductEntity> storedProducts = productRepository.findAll();
 
         for (ProductEntity productEntity : storedProducts) {
             ProductRestModel productRestModel = new ProductRestModel();

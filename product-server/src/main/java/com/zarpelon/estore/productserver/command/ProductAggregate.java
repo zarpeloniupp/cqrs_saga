@@ -1,4 +1,4 @@
-package com.zarpelon.estore.productserver.core.aggregate;
+package com.zarpelon.estore.productserver.command;
 
 import com.zarpelon.estore.productserver.command.CreateProductCommand;
 import com.zarpelon.estore.productserver.core.event.ProductCreatedEvent;
