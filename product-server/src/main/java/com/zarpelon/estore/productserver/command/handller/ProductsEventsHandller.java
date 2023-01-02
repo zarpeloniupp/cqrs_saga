@@ -6,6 +6,7 @@ import com.zarpelon.estore.productserver.command.model.ProductCreatedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
+import org.axonframework.messaging.interceptors.ExceptionHandler;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
@@ -20,13 +21,26 @@ public class ProductsEventsHandller {
         this.productRepository = productRepository;
     }
 
+    @ExceptionHandler(resultType = Exception.class)
+    public void handle(Exception exception) throws Exception {
+        throw exception;
+    }
+
+
+    @ExceptionHandler(resultType = IllegalArgumentException.class)
+    public void handle(IllegalArgumentException exception){
+        //logError
+    }
+
     @EventHandler
-    public void on(ProductCreatedEvent event) {
+    public void on(ProductCreatedEvent event) throws Exception {
 
         ProductEntity productEntity = new ProductEntity();
 
         BeanUtils.copyProperties(event, productEntity);
 
-        productRepository.save(productEntity);
+            productRepository.save(productEntity);
+        if(true) throw new Exception("forcing excepction");
+
     }
 }
