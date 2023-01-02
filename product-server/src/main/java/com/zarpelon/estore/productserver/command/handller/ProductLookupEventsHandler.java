@@ -2,7 +2,7 @@ package com.zarpelon.estore.productserver.command.handller;
 
 import com.zarpelon.estore.productserver.command.data.ProductLookupEntity;
 import com.zarpelon.estore.productserver.command.data.ProductLookupRepository;
-import com.zarpelon.estore.productserver.core.event.ProductCreatedEvent;
+import com.zarpelon.estore.productserver.command.model.ProductCreatedEvent;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;

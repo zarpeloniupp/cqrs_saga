@@ -2,7 +2,7 @@ package com.zarpelon.estore.productserver.command.handller;
 
 import com.zarpelon.estore.productserver.core.data.ProductEntity;
 import com.zarpelon.estore.productserver.core.data.ProductRepository;
-import com.zarpelon.estore.productserver.core.event.ProductCreatedEvent;
+import com.zarpelon.estore.productserver.command.model.ProductCreatedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
