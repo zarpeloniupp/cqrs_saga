@@ -1,8 +1,9 @@
 package com.zarpelon.estore.productserver.command.handller;
 
+import com.appsdeveloperblog.estore.core.events.ProductReservedEvent;
+import com.zarpelon.estore.productserver.command.model.ProductCreatedEvent;
 import com.zarpelon.estore.productserver.core.data.ProductEntity;
 import com.zarpelon.estore.productserver.core.data.ProductRepository;
-import com.zarpelon.estore.productserver.command.model.ProductCreatedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
@@ -39,8 +40,26 @@ public class ProductsEventsHandller {
 
         BeanUtils.copyProperties(event, productEntity);
 
+        try{
             productRepository.save(productEntity);
-        if(true) throw new Exception("forcing excepction");
+        }catch (Exception ex) {
+            ex.getStackTrace();
+        }
+
+       // if(true) throw new Exception("forcing excepction");
 
     }
+
+    @EventHandler
+    public void on(ProductReservedEvent productReservedEvent) {
+        var productEntity = productRepository.findByProductId(productReservedEvent.getProductId());
+        productEntity.ifPresent(it ->{
+            it.setQuantity(it.getQuantity() - productReservedEvent.getQuantity());
+            productRepository.save(productEntity.get());
+        });
+        log.info(String.format("ProductReservedEvent is called for productId [%s] and orderId [%s]",productReservedEvent.getProductId(), productReservedEvent.getOrderId()));
+    }
+
+
+
 }

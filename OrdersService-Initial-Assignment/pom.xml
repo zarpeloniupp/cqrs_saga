@@ -46,9 +46,15 @@
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-spring-boot-starter</artifactId>
-            <version>4.4.7</version>
+            <version>4.6.1</version>
         </dependency>
-        
+
+        <dependency>
+            <groupId>com.appsdeveloperblog.estore</groupId>
+            <artifactId>core</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

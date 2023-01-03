@@ -1,5 +1,7 @@
 package com.zarpelon.estore.productserver.command;
 
+import com.appsdeveloperblog.estore.core.commands.ReverseProductCommand;
+import com.appsdeveloperblog.estore.core.events.ProductReservedEvent;
 import com.zarpelon.estore.productserver.command.model.CreateProductCommand;
 import com.zarpelon.estore.productserver.command.model.ProductCreatedEvent;
 import java.math.BigDecimal;
@@ -41,12 +43,32 @@ public class ProductAggregate {
         AggregateLifecycle.apply(productCreatedEvent);
     }
 
+    @CommandHandler
+    public void handle(ReverseProductCommand reserveProductCommand){
+        if(quantity < reserveProductCommand.getQuantity()){
+            throw new IllegalArgumentException("Insufficient number of items in stock");
+        }
+        ProductReservedEvent productReservedEvent = ProductReservedEvent.builder()
+                .orderId(reserveProductCommand.getOrderId())
+                .productId(reserveProductCommand.getProductId())
+                .quantity(reserveProductCommand.getQuantity())
+                .userId(reserveProductCommand.getUserId())
+                .build();
+
+        AggregateLifecycle.apply(productReservedEvent);
+    }
+
     @EventSourcingHandler
     public void on(ProductCreatedEvent productCreatedEvent) {
         this.productId = productCreatedEvent.getProductId();
         this.title = productCreatedEvent.getTitle();
         this.price = productCreatedEvent.getPrice();
         this.quantity = productCreatedEvent.getQuantity();
+    }
+
+    @EventSourcingHandler
+    public void on(ProductReservedEvent productReservedEvent) {
+        this.quantity -= productReservedEvent.getQuantity();
     }
 
 }
