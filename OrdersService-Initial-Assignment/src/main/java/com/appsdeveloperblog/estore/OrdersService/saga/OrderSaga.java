@@ -1,10 +1,14 @@
 package com.appsdeveloperblog.estore.OrdersService.saga;
 
 import com.appsdeveloperblog.estore.OrdersService.core.events.OrderCreatedEvent;
+import com.appsdeveloperblog.estore.core.commands.ProcessPaymentCommand;
 import com.appsdeveloperblog.estore.core.commands.ReverseProductCommand;
+import com.appsdeveloperblog.estore.core.events.PaymentProcessedEvent;
 import com.appsdeveloperblog.estore.core.events.ProductReservedEvent;
 import com.appsdeveloperblog.estore.core.model.User;
 import com.appsdeveloperblog.estore.core.query.FetchUserPaymentDetailsQuery;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandCallback;
@@ -77,12 +81,29 @@ public class OrderSaga {
        }
 
        log.info(String.format("Successfully fetched user payment details for user [%s] ",userPaymentDetails.getFirstName()));
+
+        ProcessPaymentCommand processPaymentCommand = ProcessPaymentCommand.builder()
+                .orderId(productReservedEvent.getOrderId())
+                .paymentDetails(userPaymentDetails.getPaymentDetails())
+                .paymentId(UUID.randomUUID().toString())
+                .build();
+
+        String result = null;
+
+        try {
+            result = commandGateway.sendAndWait(processPaymentCommand, 10000, TimeUnit.MILLISECONDS);
+        } catch (Exception ex){
+            log.error(ex.getMessage());
+            // Start compensating transaction
+        }
+
+        if(result == null){
+            log.info("The processPaymentCommand resulted in null, Initiating a compesation transaction");
+        }
     }
 
-//    @SagaEventHandler(associationProperty = "paymentId")
-//    public void handle(PaymentProcessedEvent paymentProcessedEvent){}
-//    @EndSaga
-//    @SagaEventHandler(associationProperty = "orderId")
-//    public void handle(OrderApprovedEvent orderApprovedEvent){}
+    @SagaEventHandler(associationProperty = "orderId")
+    public void handle(PaymentProcessedEvent paymentProcessedEvent) {
 
+    }
 }
