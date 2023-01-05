@@ -36,6 +36,8 @@ public class ProductsEventsHandller {
     @EventHandler
     public void on(ProductCreatedEvent event) throws Exception {
 
+        log.info(String.format("ProductCreatedEvent is called for productId [%s] ", event.getProductId()));
+
         ProductEntity productEntity = new ProductEntity();
 
         BeanUtils.copyProperties(event, productEntity);
@@ -52,12 +54,15 @@ public class ProductsEventsHandller {
 
     @EventHandler
     public void on(ProductReservedEvent productReservedEvent) {
+
+        log.info(String.format("ProductReservedEvent is called for productId [%s] and orderId [%s]",productReservedEvent.getProductId(), productReservedEvent.getOrderId()));
+
         var productEntity = productRepository.findByProductId(productReservedEvent.getProductId());
         productEntity.ifPresent(it ->{
             it.setQuantity(it.getQuantity() - productReservedEvent.getQuantity());
-            productRepository.save(productEntity.get());
+            productRepository.save(it);
         });
-        log.info(String.format("ProductReservedEvent is called for productId [%s] and orderId [%s]",productReservedEvent.getProductId(), productReservedEvent.getOrderId()));
+
     }
 
 

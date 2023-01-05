@@ -8,6 +8,7 @@ package com.appsdeveloperblog.estore.OrdersService.command;
 import com.appsdeveloperblog.estore.OrdersService.core.events.OrderCreatedEvent;
 import com.appsdeveloperblog.estore.OrdersService.core.model.OrderStatus;
 import com.appsdeveloperblog.estore.OrdersService.command.commands.CreateOrderCommand;
+import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
@@ -16,6 +17,7 @@ import org.axonframework.spring.stereotype.Aggregate;
 import org.springframework.beans.BeanUtils;
 
 @Aggregate
+@Slf4j
 public class OrderAggregate {
 
     @AggregateIdentifier
@@ -30,7 +32,10 @@ public class OrderAggregate {
     }
 
     @CommandHandler
-    public OrderAggregate(CreateOrderCommand createOrderCommand) {   
+    public OrderAggregate(CreateOrderCommand createOrderCommand) {
+
+        log.info(String.format("CreateOrderCommand is called for orderId [%s] or productId [%s]", createOrderCommand.getOrderId(), createOrderCommand.getProductId()));
+
         OrderCreatedEvent orderCreatedEvent = new OrderCreatedEvent();
         BeanUtils.copyProperties(createOrderCommand, orderCreatedEvent);
         
@@ -39,6 +44,10 @@ public class OrderAggregate {
 
     @EventSourcingHandler
     public void on(OrderCreatedEvent orderCreatedEvent) throws Exception {
+
+        log.info(String.format("OrderCreatedEvent is called for orderId [%s] or productId [%s]", orderCreatedEvent.getOrderId(), orderCreatedEvent.getProductId()));
+
+
         this.orderId = orderCreatedEvent.getOrderId();
         this.productId = orderCreatedEvent.getProductId();
         this.userId = orderCreatedEvent.getUserId();

@@ -1,10 +1,12 @@
 package com.zarpelon.estore.productserver.command;
 
+
 import com.appsdeveloperblog.estore.core.commands.ReverseProductCommand;
 import com.appsdeveloperblog.estore.core.events.ProductReservedEvent;
 import com.zarpelon.estore.productserver.command.model.CreateProductCommand;
 import com.zarpelon.estore.productserver.command.model.ProductCreatedEvent;
 import java.math.BigDecimal;
+import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
@@ -13,6 +15,7 @@ import org.axonframework.spring.stereotype.Aggregate;
 import org.springframework.beans.BeanUtils;
 
 @Aggregate
+@Slf4j
 public class ProductAggregate {
 
     @AggregateIdentifier
@@ -26,6 +29,9 @@ public class ProductAggregate {
     @CommandHandler
     public ProductAggregate(CreateProductCommand createProductCommand){
         // validate create product command
+
+        log.info(String.format("CreateProductCommand is called for productId [%s] ", createProductCommand.getProductId()));
+
 
         if (createProductCommand.getPrice().compareTo(BigDecimal.ZERO) <=0) {
             throw new IllegalArgumentException("price cannot be less opr equal than zero");
@@ -45,9 +51,14 @@ public class ProductAggregate {
 
     @CommandHandler
     public void handle(ReverseProductCommand reserveProductCommand){
+
+        log.info(String.format("ReverseProductCommand is called for productId [%s] ", reserveProductCommand.getProductId()));
+
+
         if(quantity < reserveProductCommand.getQuantity()){
             throw new IllegalArgumentException("Insufficient number of items in stock");
         }
+
         ProductReservedEvent productReservedEvent = ProductReservedEvent.builder()
                 .orderId(reserveProductCommand.getOrderId())
                 .productId(reserveProductCommand.getProductId())
@@ -60,6 +71,9 @@ public class ProductAggregate {
 
     @EventSourcingHandler
     public void on(ProductCreatedEvent productCreatedEvent) {
+
+        log.info(String.format("ProductCreatedEvent is called for productId [%s] ", productCreatedEvent.getProductId()));
+
         this.productId = productCreatedEvent.getProductId();
         this.title = productCreatedEvent.getTitle();
         this.price = productCreatedEvent.getPrice();
@@ -68,6 +82,9 @@ public class ProductAggregate {
 
     @EventSourcingHandler
     public void on(ProductReservedEvent productReservedEvent) {
+
+        log.info(String.format("ProductReservedEvent is called for productId [%s] ", productReservedEvent.getProductId()));
+
         this.quantity -= productReservedEvent.getQuantity();
     }
 
