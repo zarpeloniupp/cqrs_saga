@@ -7,7 +7,9 @@ package com.appsdeveloperblog.estore.OrdersService.query;
 
 import com.appsdeveloperblog.estore.OrdersService.core.data.OrderEntity;
 import com.appsdeveloperblog.estore.OrdersService.core.data.OrdersRepository;
+import com.appsdeveloperblog.estore.OrdersService.core.events.OrderApprovedEvent;
 import com.appsdeveloperblog.estore.OrdersService.core.events.OrderCreatedEvent;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
@@ -36,5 +38,19 @@ public class OrderEventsHandler {
  
         this.ordersRepository.save(orderEntity);
     }
-    
+
+    @EventHandler
+    public void on(OrderApprovedEvent orderApprovedEvent) {
+        log.info(String.format("OrderApprovedEvent is called for orderId [%s] or productId [%s]", orderApprovedEvent.getOrderId()));
+        Optional<OrderEntity> order = ordersRepository.findByOrderId(orderApprovedEvent.getOrderId());
+
+       if (order.isEmpty()){
+           // TODO: do something about it
+           return;
+       }
+
+       order.get().setOrderStatus(orderApprovedEvent.getOrderStatus());
+
+       ordersRepository.save(order.get());
+    }
 }

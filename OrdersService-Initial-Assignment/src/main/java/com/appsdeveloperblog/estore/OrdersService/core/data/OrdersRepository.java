@@ -5,8 +5,10 @@
  */
 package com.appsdeveloperblog.estore.OrdersService.core.data;
 
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OrdersRepository extends JpaRepository <OrderEntity, String>{
-    
+
+    Optional<OrderEntity> findByOrderId(String orderId);
 }
