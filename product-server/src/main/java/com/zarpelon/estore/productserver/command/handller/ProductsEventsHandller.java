@@ -1,5 +1,6 @@
 package com.zarpelon.estore.productserver.command.handller;
 
+import com.appsdeveloperblog.estore.core.events.ProductReservationCancelledEvent;
 import com.appsdeveloperblog.estore.core.events.ProductReservedEvent;
 import com.zarpelon.estore.productserver.command.model.ProductCreatedEvent;
 import com.zarpelon.estore.productserver.core.data.ProductEntity;
@@ -29,7 +30,7 @@ public class ProductsEventsHandller {
 
 
     @ExceptionHandler(resultType = IllegalArgumentException.class)
-    public void handle(IllegalArgumentException exception){
+    public void handle(IllegalArgumentException exception) {
         //logError
     }
 
@@ -42,29 +43,42 @@ public class ProductsEventsHandller {
 
         BeanUtils.copyProperties(event, productEntity);
 
-        try{
+        try {
             productRepository.save(productEntity);
-        }catch (Exception ex) {
+
+        } catch (Exception ex) {
             ex.getStackTrace();
         }
 
-       // if(true) throw new Exception("forcing excepction");
+        // if(true) throw new Exception("forcing excepction");
 
     }
 
     @EventHandler
     public void on(ProductReservedEvent productReservedEvent) {
 
-        log.info(String.format("ProductReservedEvent is called for productId [%s] and orderId [%s]",productReservedEvent.getProductId(), productReservedEvent.getOrderId()));
+        log.info(String.format("ProductReservedEvent is called for productId [%s] and orderId [%s]", productReservedEvent.getProductId(), productReservedEvent.getOrderId()));
 
         var productEntity = productRepository.findByProductId(productReservedEvent.getProductId());
-        productEntity.ifPresent(it ->{
+
+        productEntity.ifPresent(it -> {
             it.setQuantity(it.getQuantity() - productReservedEvent.getQuantity());
+
             productRepository.save(it);
         });
-
     }
 
+    @EventHandler
+    public void on(ProductReservationCancelledEvent productReservationCancelledEvent) {
 
+        log.info(String.format("ProductReservationCancelledEvent is called for productId [%s] and orderId [%s]", productReservationCancelledEvent.getProductId(), productReservationCancelledEvent.getOrderId()));
 
+        var currentlyStoredProduct = productRepository.findByProductId(productReservationCancelledEvent.getProductId());
+
+        int newQuantity = currentlyStoredProduct.get().getQuantity() + productReservationCancelledEvent.getQuantity();
+
+        currentlyStoredProduct.get().setQuantity(newQuantity);
+
+        productRepository.save(currentlyStoredProduct.get());
+    }
 }

@@ -9,6 +9,7 @@ import com.appsdeveloperblog.estore.OrdersService.core.data.OrderEntity;
 import com.appsdeveloperblog.estore.OrdersService.core.data.OrdersRepository;
 import com.appsdeveloperblog.estore.OrdersService.core.events.OrderApprovedEvent;
 import com.appsdeveloperblog.estore.OrdersService.core.events.OrderCreatedEvent;
+import com.appsdeveloperblog.estore.OrdersService.core.events.OrderRejectedEvent;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.config.ProcessingGroup;
@@ -41,7 +42,8 @@ public class OrderEventsHandler {
 
     @EventHandler
     public void on(OrderApprovedEvent orderApprovedEvent) {
-        log.info(String.format("OrderApprovedEvent is called for orderId [%s] or productId [%s]", orderApprovedEvent.getOrderId()));
+        log.info(String.format("OrderApprovedEvent is called for orderId [%s]", orderApprovedEvent.getOrderId()));
+
         Optional<OrderEntity> order = ordersRepository.findByOrderId(orderApprovedEvent.getOrderId());
 
        if (order.isEmpty()){
@@ -53,4 +55,17 @@ public class OrderEventsHandler {
 
        ordersRepository.save(order.get());
     }
+
+    @EventHandler
+    public void on(OrderRejectedEvent orderRejectedEvent) {
+        log.info(String.format("OrderRejectedEvent is called for orderId [%s]", orderRejectedEvent.getOrderId()));
+
+        Optional<OrderEntity> orderEntity = ordersRepository.findByOrderId(orderRejectedEvent.getOrderId());
+
+        orderEntity.ifPresent(entity -> entity.setOrderStatus(orderRejectedEvent.getOrderStatus()));
+
+        ordersRepository.save(orderEntity.get());
+    }
+
+
 }

@@ -1,7 +1,9 @@
 package com.zarpelon.estore.productserver.command;
 
 
+import com.appsdeveloperblog.estore.core.commands.CancelProductReservationCommand;
 import com.appsdeveloperblog.estore.core.commands.ReverseProductCommand;
+import com.appsdeveloperblog.estore.core.events.ProductReservationCancelledEvent;
 import com.appsdeveloperblog.estore.core.events.ProductReservedEvent;
 import com.zarpelon.estore.productserver.command.model.CreateProductCommand;
 import com.zarpelon.estore.productserver.command.model.ProductCreatedEvent;
@@ -68,6 +70,33 @@ public class ProductAggregate {
 
         AggregateLifecycle.apply(productReservedEvent);
     }
+
+    @CommandHandler
+    public void handle(CancelProductReservationCommand cancelProductReservationCommand) {
+
+        log.info(String.format("CancelProductReservationCommand is called for productId [%s] ", cancelProductReservationCommand.getProductId()));
+
+
+        ProductReservationCancelledEvent productReservationCancelledEvent = ProductReservationCancelledEvent.builder()
+                .orderId(cancelProductReservationCommand.getOrderId())
+                .productId(cancelProductReservationCommand.getProductId())
+                .quantity(cancelProductReservationCommand.getQuantity())
+                .reason(cancelProductReservationCommand.getReason())
+                .userId(cancelProductReservationCommand.getUserId())
+                .build();
+
+        AggregateLifecycle.apply(productReservationCancelledEvent);
+    }
+
+    @EventSourcingHandler
+    public void on(ProductReservationCancelledEvent productReservationCancelledEvent) {
+
+        log.info(String.format("ProductReservationCancelledEvent is called for productId [%s] ", productReservationCancelledEvent.getProductId()));
+
+        this.quantity += productReservationCancelledEvent.getQuantity();
+
+    }
+
 
     @EventSourcingHandler
     public void on(ProductCreatedEvent productCreatedEvent) {
