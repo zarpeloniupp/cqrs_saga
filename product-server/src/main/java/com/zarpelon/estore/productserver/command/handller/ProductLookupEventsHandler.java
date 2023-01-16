@@ -5,6 +5,7 @@ import com.zarpelon.estore.productserver.command.data.ProductLookupRepository;
 import com.zarpelon.estore.productserver.command.model.ProductCreatedEvent;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
+import org.axonframework.eventhandling.ResetHandler;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,5 +21,10 @@ public class ProductLookupEventsHandler {
     @EventHandler
     public void on(ProductCreatedEvent event){
         productLookupRepository.save(new ProductLookupEntity(event.getProductId(), event.getTitle()));
+    }
+
+    @ResetHandler
+    public void reset() {
+        productLookupRepository.deleteAll();
     }
 }
