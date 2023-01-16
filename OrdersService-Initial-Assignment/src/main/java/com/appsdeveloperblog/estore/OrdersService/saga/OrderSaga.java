@@ -29,7 +29,6 @@ import org.axonframework.deadline.annotation.DeadlineHandler;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
-import org.axonframework.modelling.saga.SagaLifecycle;
 import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.queryhandling.QueryUpdateEmitter;
@@ -74,6 +73,11 @@ public class OrderSaga {
             public void onResult(@Nonnull CommandMessage<? extends ReverseProductCommand> commandMessage, @Nonnull CommandResultMessage<?> commandResultMessage) {
                 if (commandResultMessage.isExceptional()) {
                     log.info(String.format("commandResultMessage.isExceptional() %s ",  commandResultMessage.toString()));
+                    RejectOrderCommand rejectOrderCommand = new RejectOrderCommand(
+                            orderCreatedEvent.getOrderId(),
+                            commandResultMessage.exceptionResult().getMessage()
+                    );
+                    commandGateway.send(rejectOrderCommand);
                 }
             }
         });
