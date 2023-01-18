@@ -12,6 +12,8 @@ Finally, you will learn about the Saga design pattern and how to group multiple 
 
 All from the very beginning, to make these advanced topics easier.
 
+![](saga.png)
+
 ![img.png](img.png)
 
 Fonte: https://udemy.com/course/spring-boot-microservices-cqrs-saga-axon-frameworkt
